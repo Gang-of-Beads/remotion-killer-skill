@@ -30,6 +30,8 @@ description: Professional audio in Remotion — TTS narration orchestration, mea
 - Visual pulses: decay envelope per beat `pulse = Math.exp(-beatPhase * k)` (k ≈ 4–6) driving scale, glow (`boxShadow`/`textShadow` radius), or particle brightness.
 - Real-time waveform-reactive visuals: `useAudioData()` + `visualizeAudio()` from `@remotion/media-utils` inside components (bars, circles) — frame-accurate and render-safe.
 - Cutting on beats: place `<Sequence from>` values on beat frames; scene changes on downbeats feel intentional.
+- Reverse snapping (visual-first): when visuals are already timed (e.g. a transition must land on a specific frame), find the nearest beat/onset from the beat JSON and either nudge the visual ±2–3 frames or generate the music at a BPM whose beat grid aligns (`bpm = 60 * fps / framesPerDesiredInterval`). Verify with sudden-volume-change detection against the scene-cut list (see remotion-video-qa).
+- Generated-music prompt structure (MiniMax Music 3 and similar): describe genre, BPM, key, instruments, mood, arrangement arc (`intro → build → drop → outro`), and `instrumental only, no vocals` for BGM. BPM in the prompt makes the no-detection snap path usable; ask for a clean ending if the video must end in silence.
 - Music level under narration: 0.10–0.15 volume (BGM), VO at 0.85–0.95. Manual ducking: interpolate BGM volume to ~0.05 during VO windows via `<Sequence>`-scoped `<Audio volume>`.
 
 ## Captions
