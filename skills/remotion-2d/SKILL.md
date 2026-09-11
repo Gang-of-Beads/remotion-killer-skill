@@ -24,6 +24,12 @@ description: 2D scene craft in Remotion — animation tuning with spring/interpo
 - Exit choreography: mirror the entrance (reverse translateY + fade) but faster (~60–70% of entrance duration). Never let exits overlap scene cuts unless the transition owns them (see remotion-transitions).
 - Loop-friendly ambient motion: `Math.sin(frame * f + phase)` with f between 0.004 (slow drift) and 0.02 (noticeable bob). Combine two sines with different frequencies for organic motion.
 - Overshoot/anticipation: pull back before a move (interpolate progress through [0, -0.1, 1] with keyframes) for cartoon emphasis; use sparingly (once per scene).
+- Mask reveal (premium entrances): parent `overflow: hidden`, child springs `translateY(150%→0)` — text rises from a clip line instead of fading in. Combine with per-word stagger for kinetic titles.
+- 3D card flip (hero move): container `perspective: 900–1200`, card `transform: rotateY(deg)` from a slow spring (damping 12, stiffness 60, mass 1.2 → ~40-frame flip). Render front content when `deg < 90`, back content after (avoids mirrored text). Peak a radial glow and box-shadow at 90° via `interpolate(deg, [0, 90, 180], [0.2, 1, 0.3])` — the flip "charges" the room at the edge-on moment. Add a constant slight `rotateX(tilt)` tilt + sine float so the card never sits flat.
+- CSS-3D orbit rings: a square div rotated `rotateX(70–75deg) rotateZ(frame * speed)` with `transformStyle: preserve-3d`, dots positioned by cos/sin on its edge — reads as a spinning orbital ring at near-zero cost. Stack 2 rings at different radii/speeds for depth.
+- Typewriter: reveal `text.slice(0, Math.floor((frame - start) / charsPerFrame))` with a blinking block cursor (`frame % 30 < 15`). Gate follow-up animations on typing completion (`typingDoneFrame = start + len * charsPerFrame`) so springs fire after the text lands.
+- Blueprint grid: `backgroundImage` of two 1px linear-gradients at 40–50px background-size, alpha ≤ 0.05 — adds technical depth behind cards without noise. Pair with a mid-screen radial glow that breathes.
+- State-machine scenes: derive phase from frame (`typing → clicked → pulse`), each phase gating different springs — gives UI-demos a believable interaction feel (press ripple, button pulse, cursor state changes).
 
 ## Kinetic typography
 

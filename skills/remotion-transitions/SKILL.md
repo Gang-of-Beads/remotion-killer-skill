@@ -21,6 +21,16 @@ description: Scene-to-scene transitions in Remotion using @remotion/transitions 
   - `flip` — dramatic reveal of a "back side"; needs calm content on both sides.
 - Custom presentation: implement `(props) => ReactElement` receiving `progress` (0→1) and `enterTransition`/`exitTransition` flags; return children wrapped in a style driven by progress (transforms, opacity, filters). Register via `presentation={myPresentation()}`. Use for brand-specific moves (e.g. mask wipes with a logo shape).
 
+## Custom presentations (the anti-PPT move)
+
+- Built-in fade/slide read as slideshow if every cut uses them. Write custom presentations for signature moves — the API: a factory returning `{ component, props }`; the component receives `presentationProgress` (0→1), `presentationDirection` (`"entering" | "exiting"`), `presentationDurationInFrames`, and `children`. Wrap children in an AbsoluteFill whose style derives from progress; branch on direction (entering animates in, exiting animates out).
+- Recipes (each ~20 lines, no library):
+  - **Punch-zoom**: exiting scales 1→1.45 with blur 0→14px and early fade; entering scales 0.82→1 (ease-out cubic) with blur 10→0. Reads as "punching through the camera".
+  - **Whip pan**: exiting translateX ±130% with skewX ∓6° and blur→18px; entering from the opposite side with ease-out quart and blur 18→0. Skew+directional blur fakes motion blur.
+  - **Depth push**: exiting scales to 0.55 with brightness→0.2 (dives into the screen); entering scales 1.35→1 with brightness 0.3→1, on an opaque background fill so the two slides don't blend.
+- Blur-based transitions are expensive: they rasterize both slides every transition frame. At 1080p and 16-frame transitions this is fine; at 4K prefer masks/transform-only.
+- Pick 2–3 custom presentations and alternate them across the video; one repeated move also reads as PPT.
+
 ## Timing
 
 - `linearTiming({durationInFrames})` — deterministic, predictable, default choice (12–24 frames at 30fps).

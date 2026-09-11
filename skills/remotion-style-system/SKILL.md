@@ -23,6 +23,7 @@ description: Visual style systems for Remotion videos — palette building, grad
 - Mesh-gradient look: 2–4 radial gradients (one per hue) on stacked absolute layers, each `filter: blur(60–140px)`, positions drifting with two-frequency sines. Opacity per layer 0.06–0.15 on light, 0.2–0.4 on dark.
 - Linear gradients for surfaces: 135° hue-to-hue-shifted-hue (same hue family) reads premium; multi-hue linear reads promotional.
 - Animated gradient: move the gradient center (not hue) over time — cheaper and smoother than animating colors (`interpolateColors` exists for hue shifts when needed).
+- Rotating conic halo: a large square/circle div with `conic-gradient(from ${frame * 0.7}deg, colorA, colorB, colorC, colorA)` at low alpha, blurred 80–120px, behind a hero title — gives a slowly swirling aurora ring that reads as energy, not decoration. Conic gradients are also the standard "border glow spinner": conic ring + mask to a border shape.
 
 ## Glassmorphism
 
