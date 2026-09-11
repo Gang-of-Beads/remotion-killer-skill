@@ -1,0 +1,11 @@
+# Local knowledge base (not part of the skill)
+knowledge/
+
+# Experiments and renders
+experiments/
+out/
+qa/
+node_modules/
+*.log
+.DS_Store
+.pi/
