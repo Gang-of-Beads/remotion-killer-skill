@@ -29,6 +29,31 @@ npx skills add https://github.com/Gang-of-Beads/remotion-killer-skill --skill re
 
 The official Remotion skills cover the API thoroughly. These skills cover what they don't: **the craft layer** — how to tune springs so motion feels expensive, build glassmorphism that survives headless rendering, snap cuts to beats detected from generated music, drive deterministic 3D from the frame clock, design one composition that renders at any resolution, and run a rigorous QA pass on the rendered file before calling it done. Everything here was verified against real renders (see each skill's gotchas for the failures we hit so you don't have to).
 
+## Proof: the trailer was built with these skills
+
+The promo trailer was produced end-to-end by an agent following exactly these skills — every technique in the video maps to a skill entry:
+
+| In the video | Skill entry |
+| --- | --- |
+| 3D warp tunnel + starfield, camera dolly | `remotion-3d` — ThreeCanvas, frame-driven props, seeded particles |
+| Conic halo + CSS-3D orbit rings behind the title | `remotion-style-system` / `remotion-2d` — orbit rings, conic halos |
+| Mask-reveal kinetic title with unclipped glow layer | `remotion-2d` — mask reveals, stagger springs |
+| Blueprint grid + glow sweep over the skill cards | `remotion-2d` — blueprint grid; `remotion-style-system` — glow recipes |
+| Featured card that 3D-flips with glow peak at 90° | `remotion-2d` — 3D card flip pattern |
+| Waveform bars reacting to the narration | `remotion-audio-sync` — `useAudioData` + `visualizeAudio` |
+| 3D glass panels with typewriter code | `remotion-3d` — transmission materials; `remotion-2d` — typewriter |
+| QA bay: ffmpeg evidence terminal + APPROVED stamp | `remotion-video-qa` — evidence extraction + acceptance rubric |
+| depth-push / whip-pan / punch-zoom cuts | `remotion-transitions` — custom presentations |
+
+The production pipeline the agent ran (each step covered by a skill):
+
+1. **Narration** — Azure Speech premium voice (`DragonHD`), one MP3 per scene (`remotion-audio-sync`)
+2. **Timing** — `ffprobe` each VO file → scene `durationInFrames` = VO duration + buffer (`remotion-audio-sync`)
+3. **Music** — MiniMax Music 3 open weights (`MiniMaxAI/MiniMax-Music3` via diffusers), instrumental at 120 BPM; on a 10 GB GPU stream the 17 GB text encoder with group offloading, read the result via `PipelineState.get("audios")`, and pass `audio_duration` to control length (`remotion-audio-sync`)
+4. **Mixing** — BGM bed at 0.16, auto-ducked to 0.06 inside VO windows, fades at both ends (`remotion-audio-sync`)
+5. **Render** — `--gl=angle` for WebGL scenes, `--crf 18` master (`remotion-rendering`)
+6. **QA** — ffprobe metadata, sampled frames, `volumedetect`, visual pass over every scene and transition (`remotion-video-qa`)
+
 ## Highlights
 
 - **Determinism contract**: every visible value derives from `useCurrentFrame()`; seeded randomness only; `delayRender` for async assets.
