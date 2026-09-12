@@ -13,7 +13,15 @@ description: Professional audio in Remotion — TTS narration orchestration, mea
 4. Import the manifest in the composition and lay out `<Sequence from>` windows from it. Total duration = Σ scene frames.
 5. For scripts that change length: pass the manifest as props and compute `durationInFrames` in `calculateMetadata` — one composition serves any script.
 
-## TTS services
+## Provider-agnostic by design
+
+None of the steps below require a specific vendor. The skill defines an **interface contract**: any narration source (TTS API, local model, human recording) and any music source (music-gen model, stock track, self-composed) works as long as it can deliver:
+- one audio file per scene (or per speaker), any format `ffprobe` can measure;
+- optional word-level timings if you want captions without a transcription pass.
+
+Pick whichever provider matches the user's account, region, budget, and quality bar. The tradeoffs below are guidance for choosing, not dependencies. Write a thin generation script per provider — everything downstream (timing, sync, mixing, QA) is provider-independent and never changes.
+
+## TTS services (pick any, per user preference)
 
 - ElevenLabs: best quality; multilingual models; some endpoints return word-level timestamps (skips the transcription pass for captions).
 - Azure Speech: cheap, SSML control of pauses/rate/pitch — good for batch VO.
@@ -23,7 +31,7 @@ description: Professional audio in Remotion — TTS narration orchestration, mea
 
 ## Music & beat sync
 
-- Generate BGM with a music model (e.g. MiniMax Music) or pick a track; export WAV for analysis.
+- Music source is provider-agnostic too: music-gen models (MiniMax Music, Suno, Udio, Lyria...), stock libraries, or your own composition. Only requirements: an offline audio file and (ideally) known/steady BPM. Generate or fetch offline (build script), export WAV for analysis.
 - Beat/onset detection: run librosa (`librosa.onset.onset_detect` / beat tracking) or `aubio` offline; emit a JSON list of beat timestamps (ms).
 - Convert to frames: `frame = Math.round(ms * fps / 1000)`. Snap cuts, transitions, and impact moments to the nearest beat frame.
 - BPM math when the track has steady tempo: `framesPerBeat = fps * 60 / bpm` (30fps@120bpm = 15). Then beats are `frame % framesPerBeat === 0` — no detection needed for generated music where you control the BPM.

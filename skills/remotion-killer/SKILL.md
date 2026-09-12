@@ -13,8 +13,9 @@ Master router. Load the topic skill that matches the current task; load several 
 2. **Scaffold**: `npx create-video@latest` (blank) or add Remotion to an existing app. One `<Composition>` per deliverable; scenes as separate components joined by `<Sequence>` or `<TransitionSeries>`.
 3. **Determinism contract** (non-negotiable): every visible value derives from `useCurrentFrame()` / props. No `setTimeout`, no CSS transitions/animations, no `Math.random()` (use `random(seed)` from remotion), no `Date.now()`, no network fetch without `delayRender`/`continueRender`.
 4. **Style through a token file**: one `tokens.ts` (palette, spacing, typography scale, easing presets) imported everywhere. See remotion-style-system.
-5. **Iterate in Studio** (`npx remotion studio`), render short ranges (`--frames=0-90`) while developing, full render at the end.
-6. **QA the rendered file, not the preview**: extract frames, check audio levels, inspect visually. See remotion-video-qa.
+5. **Provider choices belong to the user**: narration/music/voice services are swappable — the skills define the contract (audio files per scene, durations, manifest), never a vendor. Follow the user's habit, account, or budget. See remotion-audio-sync.
+6. **Iterate in Studio** (`npx remotion studio`), render short ranges (`--frames=0-90`) while developing, full render at the end.
+7. **QA the rendered file, not the preview**: extract frames, check audio levels, inspect visually. See remotion-video-qa.
 
 ## Routing table
 
