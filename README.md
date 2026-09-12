@@ -2,11 +2,9 @@
 
 Open-source agent skills for making **maximum-impact videos with [Remotion](https://remotion.dev)** — programmatic video in React. Content-free and technique-only: no project assets, just distilled, battle-tested guidance for what actually makes Remotion videos look stunning and ship reliably.
 
-## Proof: the trailer was built with these skills
+[![Remotion Killer promo trailer](docs/trailer-poster.png)](https://github.com/Gang-of-Beads/remotion-killer-skill/releases/download/trailer-v1/trailer.mp4)
 
-https://github.com/Gang-of-Beads/remotion-killer-skill/releases/download/trailer-v1/trailer.mp4
-
-The promo trailer was produced end-to-end by an agent following exactly these skills — every technique in the video maps to a skill entry:
+▶ **[watch the trailer](https://github.com/Gang-of-Beads/remotion-killer-skill/releases/download/trailer-v1/trailer.mp4)** — rendered end-to-end by an agent following these skills. Every technique in it maps to a skill entry:
 
 | In the video | Skill entry |
 | --- | --- |
