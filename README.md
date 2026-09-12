@@ -4,6 +4,8 @@ Open-source agent skills for making **maximum-impact videos with [Remotion](http
 
 ## Proof: the trailer was built with these skills
 
+https://github.com/Gang-of-Beads/remotion-killer-skill/releases/download/trailer-v1/trailer.mp4
+
 The promo trailer was produced end-to-end by an agent following exactly these skills — every technique in the video maps to a skill entry:
 
 | In the video | Skill entry |
