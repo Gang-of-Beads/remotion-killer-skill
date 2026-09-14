@@ -47,6 +47,15 @@ description: 2D scene craft in Remotion — animation tuning with spring/interpo
 - All lengths relative: derive from `width`/`height` of `useVideoConfig()`, or use a scale factor `const s = width / 1920` applied to font sizes and spacing so the design survives resolution changes (see remotion-rendering).
 - Cards/panels: border-radius ≈ 1/12 of card width; shadow `0 20px 60px rgba(0,0,0,0.3)` reads as depth without blur cost.
 
+## Slow push-in over large bitmaps (Ken Burns shimmer)
+
+Symptom: stills are clean but text edges crawl/shimmer during a slow scale push-in over a heavily downscaled screenshot (e.g. a 4K capture shown at ~460px). Cause: every frame the browser re-resamples the huge source at a non-integer ratio with no mipmaps — resampling aliasing on fine text. It is a resampling artifact, NOT an animation/determinism bug (stills clean + motion shimmer is the signature). Recipe:
+
+1. **Pre-downscale assets at build time** to at most ~2x their maximum on-screen size (display width x the largest scale factor of the animation), with a high-quality filter (`sharp` lanczos, or `sips`). Never let the browser downscale more than ~2x per frame; an 8x per-frame downscale of fine UI text will shimmer no matter what.
+2. **Snap translate to integer px** (quantize the interpolated offset); keep the scale the only subpixel value, and prefer scaling from the element's own center so translate isn't compensating for scale origin.
+3. **Codec**: render text-heavy masters with `--image-format=png`, or `--jpeg-quality >= 95` if size matters — JPEG ringing compounds the shimmer but is not its root cause.
+4. Alternative for very slow moves: keep the image at a fixed size inside an `overflow:hidden` frame and pan with integer-px translate instead of scaling — rock-stable, at the cost of visible stepping at very slow speeds (test at 30fps).
+
 ## Charts and data (no library needed)
 
 - Bars/lines/donuts as SVG driven by spring progress: line reveals via `strokeDasharray`/`strokeDashoffset = length * (1 - progress)`; bar heights `interpolate(progress, [0,1], [0, value])`.
