@@ -36,6 +36,7 @@ npx remotion render <entry> <comp-id> out.mp4 [flags]
 
 - 30fps master is standard. For 120fps delivery: render ProRes then `ffmpeg -i in.mov -vf "minterpolate=fps=120:mi_mode=mci" out.mov` (slow; acceptable for shorts). Note synthetic frames can smear thin text — check a sample.
 - Changing fps in Remotion changes all frame math (springs auto-adapt via `fps`), so retiming = re-render, not manual conversion.
+- **Temporal supersampling for smooth slow motion**: write animations fps-independently (`time = frame / fps`), render at N x target fps (`--fps=120`), then average N subframes per output frame: `ffmpeg -i 120fps.mp4 -vf "tblend=average,framestep=2,tblend=average,framestep=2" -r 30 out.mp4`. Each output frame is the temporal average of continuous motion — kills judder on sub-pixel/slow moves and adds free motion blur. Render cost xN; mux original audio after. (`minterpolate` with `mi_mode=blend` is an alternative one-liner, and Remotion's `<CameraMotionBlur>` is a cheaper in-render approximation, not true subframe integration.)
 
 ## Platform presets
 
